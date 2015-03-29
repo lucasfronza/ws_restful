@@ -1,14 +1,55 @@
 <?php
 
-/*require '../Slim/Slim/Slim.php';*/
 require 'vendor/autoload.php';
+require 'models/key_model.php';
 \Slim\Slim::registerAutoloader();
+
+// Configuração do Banco de Dados
+$db = new medoo([
+    'database_type' => 'mysql',
+    'database_name' => 'ic_webservices_bd',
+    'server' => 'localhost',
+    'username' => 'ic_ws_user',
+    'password' => '',
+    'charset' => 'utf8'
+]);
+
 $app = new \Slim\Slim();
 $app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
 $app->get('/', function () {
-  echo "SlimProdutos ";
+    echo "SlimProdutos ";
 });
+
+// API group
+$app->group('/api', function () use ($app, $db) {
+
+    // Version group
+    $app->group('/v1', function () use ($app, $db) {
+
+        // GET route
+        $app->get('/contacts/:id', function ($id) use ($app, $db) {
+            echo "Contato $id";
+            $model = new Key_model($db);
+            echo $model->teste();
+            /*$datas = $db->select("keys", "*");*/
+            /*echo json_encode($datas, JSON_PRETTY_PRINT);*/
+        });
+
+        // PUT route, for updating
+        $app->put('/contacts/:id', function ($id) use ($app, $db) {
+
+        });
+
+        // DELETE route
+        $app->delete('/contacts/:id', function ($id) {
+
+        });
+
+    });
+
+});
+
 
 $app->get('/categorias','getCategorias');
 $app->post('/produtos','addProduto');
@@ -19,14 +60,16 @@ $app->get('/produtos','getProdutos');
 
 $app->run();
 
+
+
 function getConn()
 {
- return new PDO('mysql:host=localhost;dbname=SlimProdutos',
-  'root',
-  '',
-  array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-  
-  );
+    return new PDO('mysql:host=localhost;dbname=SlimProdutos',
+      'root',
+      '',
+      array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+
+      );
 
 }
 
