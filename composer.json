@@ -1,0 +1,13 @@
+{
+    "name": "Aplicação",
+    "description": "Descrição",
+    "authors": [
+        {
+            "name": "Lucas Bortolini Fronza",
+            "email": "lbfronza@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "2.*"
+    }
+}
