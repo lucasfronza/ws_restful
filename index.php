@@ -2,6 +2,7 @@
 
 require 'vendor/autoload.php';
 require 'models/key_model.php';
+require 'models/quiz_model.php';
 \Slim\Slim::registerAutoloader();
 
 // Configuração do Banco de Dados
@@ -17,9 +18,11 @@ $db = new medoo([
 $app = new \Slim\Slim();
 $app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
+/*
 $app->get('/', function () {
     echo "SlimProdutos ";
 });
+*/
 
 // API group
 $app->group('/api', function () use ($app, $db) {
@@ -27,6 +30,46 @@ $app->group('/api', function () use ($app, $db) {
     // Version group
     $app->group('/v1', function () use ($app, $db) {
 
+        // Serviço de Quiz
+        # Cria um novo Quiz, retornando um key
+        $app->post('/quiz/', function () use ($app, $db) {
+            $key_model = new Key_model($db);
+            $quiz_model = new Quiz_model($db);
+            // Build a new key
+            $key = $key_model->_generate_key();
+
+            // Insert the new key
+            if ($key_model->_insert_key($key))
+            {
+
+                $data['key'] = $key;
+                $data['question'] = $app->request()->post('question');
+                $data['comment'] = $app->request()->post('comment');
+                $data['alternative1'] = $app->request()->post('alternative1');
+                $data['alternative2'] = $app->request()->post('alternative2');
+                $data['alternative3'] = $app->request()->post('alternative3');
+                $data['alternative4'] = $app->request()->post('alternative4');
+                $data['alternative5'] = $app->request()->post('alternative5');
+                $data['correctAnswer'] = $app->request()->post('correctAnswer');
+
+                if ($quiz_model->insert($data))
+                {
+                    $app->response()->status(201); // 201 = Created
+                    echo json_encode(array('status' => 1, 'message' => 'Quiz created.', 'key' => $key));
+                } else {
+                    $app->response()->status(500); // 500 = Internal Server Error
+                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.'));
+                }
+            }
+            else
+            {
+                $app->response()->status(500); // 500 = Internal Server Error
+                echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.'));
+            }
+        });
+
+
+        // Exemplo: contacts
         // GET route
         $app->get('/contacts/:id', function ($id) use ($app, $db) {
             echo "Contato $id";
@@ -46,22 +89,29 @@ $app->group('/api', function () use ($app, $db) {
 
         });
 
+        $app->post('/contacts/', function () use ($app, $db) {
+            echo "teste";
+            $body = $app->request()->getBody();
+            
+            echo $app->request()->post('key');
+        });
+
     });
 
 });
 
 
-$app->get('/categorias','getCategorias');
+/*$app->get('/categorias','getCategorias');
 $app->post('/produtos','addProduto');
 $app->get('/produtos/:id','getProduto');
 $app->post('/produtos/:id','saveProduto');
 $app->delete('/produtos/:id','deleteProduto');
-$app->get('/produtos','getProdutos');
+$app->get('/produtos','getProdutos');*/
 
 $app->run();
 
 
-
+/*
 function getConn()
 {
     return new PDO('mysql:host=localhost;dbname=SlimProdutos',
@@ -150,3 +200,4 @@ function getProdutos()
   echo "{\"produtos\":".json_encode($produtos)."}";
 }
 
+*/

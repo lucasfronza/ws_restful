@@ -45,7 +45,7 @@ class Key_model {
 
     // --------------------------------------------------------------------
 
-    public function _insert_key($key, $data)
+    public function _insert_key($key)
     {
         
         $data['key'] = $key;
