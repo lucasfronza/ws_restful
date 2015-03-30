@@ -33,14 +33,14 @@ class Key_model {
 
     public function _get_key($key)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->get(config_item('rest_keys_table'))->row();
+        return $this->db->select("keys", "*", ["key" => $key]);
     }
 
     // --------------------------------------------------------------------
 
     public function _key_exists($key)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->count_all_results(config_item('rest_keys_table')) > 0;
+        return ($this->db->count("keys", ["key" => $key]) != 0);
     }
 
     // --------------------------------------------------------------------
@@ -48,24 +48,24 @@ class Key_model {
     public function _insert_key($key, $data)
     {
         
-        $data[config_item('rest_key_column')] = $key;
+        $data['key'] = $key;
         $data['date_created'] = function_exists('now') ? now() : time();
 
-        return $this->db->set($data)->insert(config_item('rest_keys_table'));
+        return $this->db->insert("keys", $data);
     }
 
     // --------------------------------------------------------------------
 
     public function _update_key($key, $data)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->update(config_item('rest_keys_table'), $data);
+        return $this->db->insert("keys", $data, ["key" => $key]);
     }
 
     // --------------------------------------------------------------------
 
     public function _delete_key($key)
     {
-        return $this->db->where(config_item('rest_key_column'), $key)->delete(config_item('rest_keys_table'));
+        return $this->db->delete("keys", ["key" => $key]);
     }
     
 }

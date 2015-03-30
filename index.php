@@ -31,7 +31,7 @@ $app->group('/api', function () use ($app, $db) {
         $app->get('/contacts/:id', function ($id) use ($app, $db) {
             echo "Contato $id";
             $model = new Key_model($db);
-            echo $model->teste();
+            var_dump($model->_key_exists('c14fa1e82b559cc9570e827ff884ba5a5504c4ae'));
             /*$datas = $db->select("keys", "*");*/
             /*echo json_encode($datas, JSON_PRETTY_PRINT);*/
         });
