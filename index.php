@@ -18,12 +18,6 @@ $db = new medoo([
 $app = new \Slim\Slim();
 $app->response()->header('Content-Type', 'application/json;charset=utf-8');
 
-/*
-$app->get('/', function () {
-    echo "SlimProdutos ";
-});
-*/
-
 // API group
 $app->group('/api', function () use ($app, $db) {
 
@@ -85,7 +79,7 @@ $app->group('/api', function () use ($app, $db) {
 
             if (!$key_model->_key_exists($data['key']))
             {
-                $app->response()->status(204);
+                $app->response()->status(400);
                 echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
             } else {
 
@@ -107,7 +101,7 @@ $app->group('/api', function () use ($app, $db) {
 
             if ( ! $key_model->_key_exists($key) )
             {
-                $app->response()->status(204);
+                $app->response()->status(400);
                 echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
             } else {
                 $app->response()->status(200);
@@ -122,7 +116,7 @@ $app->group('/api', function () use ($app, $db) {
 
             if ( ! $key_model->_key_exists($key))
             {
-                $app->response()->status(204);
+                $app->response()->status(400);
                 echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
             } else {
                 if($quiz_model->delete($key) && $key_model->_delete_key($key))
