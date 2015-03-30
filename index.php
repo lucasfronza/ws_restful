@@ -30,7 +30,7 @@ $app->group('/api', function () use ($app, $db) {
     // Version group
     $app->group('/v1', function () use ($app, $db) {
 
-        // Serviço de Quiz
+        // Serviço de Quiz - Início
         # Cria um novo Quiz, retornando um key
         $app->post('/quiz/', function () use ($app, $db) {
             $key_model = new Key_model($db);
@@ -68,136 +68,80 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Passando questao, alternativas e resposta, atualiza o Quiz
+        $app->put('/quiz/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $quiz_model = new Quiz_model($db);
 
-        // Exemplo: contacts
-        // GET route
-        $app->get('/contacts/:id', function ($id) use ($app, $db) {
-            echo "Contato $id";
-            $model = new Key_model($db);
-            var_dump($model->_key_exists('c14fa1e82b559cc9570e827ff884ba5a5504c4ae'));
-            /*$datas = $db->select("keys", "*");*/
-            /*echo json_encode($datas, JSON_PRETTY_PRINT);*/
+            $data['key'] = $key;
+            $data['question'] = $app->request()->put('question');
+            $data['comment'] = $app->request()->put('comment');
+            $data['alternative1'] = $app->request()->put('alternative1');
+            $data['alternative2'] = $app->request()->put('alternative2');
+            $data['alternative3'] = $app->request()->put('alternative3');
+            $data['alternative4'] = $app->request()->put('alternative4');
+            $data['alternative5'] = $app->request()->put('alternative5');
+            $data['correctAnswer'] = $app->request()->put('correctAnswer');
+
+            if (!$key_model->_key_exists($data['key']))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+            } else {
+
+                if ($quiz_model->update($data))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Quiz updated.'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.')); // 500 = Internal Server Error
+                }
+            }
         });
 
-        // PUT route, for updating
-        $app->put('/contacts/:id', function ($id) use ($app, $db) {
+        # Retorna o Quiz com pergunta, alternativas e respostas
+        $app->get('/quiz/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $quiz_model = new Quiz_model($db);
 
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($quiz_model->get($key));
+            }
         });
 
-        // DELETE route
-        $app->delete('/contacts/:id', function ($id) {
+        # Deleta um Quiz
+        $app->delete('/quiz/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $quiz_model = new Quiz_model($db);
 
+            if ( ! $key_model->_key_exists($key))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+            } else {
+                if($quiz_model->delete($key) && $key_model->_delete_key($key))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Quiz deleted'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'error' => 'Internal Server Error'));
+                }
+            }
         });
-
-        $app->post('/contacts/', function () use ($app, $db) {
-            echo "teste";
-            $body = $app->request()->getBody();
-            
-            echo $app->request()->post('key');
-        });
+        // Serviço de Quiz - Fim
 
     });
 
 });
 
 
-/*$app->get('/categorias','getCategorias');
-$app->post('/produtos','addProduto');
-$app->get('/produtos/:id','getProduto');
-$app->post('/produtos/:id','saveProduto');
-$app->delete('/produtos/:id','deleteProduto');
-$app->get('/produtos','getProdutos');*/
-
 $app->run();
 
-
-/*
-function getConn()
-{
-    return new PDO('mysql:host=localhost;dbname=SlimProdutos',
-      'root',
-      '',
-      array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
-
-      );
-
-}
-
-function getCategorias()
-{
-  $stmt = getConn()->query("SELECT * FROM Categorias");
-  $categorias = $stmt->fetchAll(PDO::FETCH_OBJ);
-  echo "{\"categorias\":".json_encode($categorias)."}";
-}
-
-function addProduto()
-{
-  $request = \Slim\Slim::getInstance()->request();
-  $produto = json_decode($request->getBody());
-  $sql = "INSERT INTO produtos (nome,preco,dataInclusao,idCategoria) values (:nome,:preco,:dataInclusao,:idCategoria) ";
-  $conn = getConn();
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam("nome",$produto->nome);
-  $stmt->bindParam("preco",$produto->preco);
-  $stmt->bindParam("dataInclusao",$produto->dataInclusao);
-  $stmt->bindParam("idCategoria",$produto->idCategoria);
-  $stmt->execute();
-  $produto->id = $conn->lastInsertId();
-  echo json_encode($produto);
-}
-
-function getProduto($id)
-{
-  $conn = getConn();
-  $sql = "SELECT * FROM produtos WHERE id=:id";
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam("id",$id);
-  $stmt->execute();
-  $produto = $stmt->fetchObject();
-
-  //categoria
-  $sql = "SELECT * FROM categorias WHERE id=:id";
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam("id",$produto->idCategoria);
-  $stmt->execute();
-  $produto->categoria =  $stmt->fetchObject();
-
-  echo json_encode($produto);
-}
-
-function saveProduto($id)
-{
-  $request = \Slim\Slim::getInstance()->request();
-  $produto = json_decode($request->getBody());
-  $sql = "UPDATE produtos SET nome=:nome,preco=:preco,dataInclusao=:dataInclusao,idCategoria=:idCategoria WHERE id=:id";
-  $conn = getConn();
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam("nome",$produto->nome);
-  $stmt->bindParam("preco",$produto->preco);
-  $stmt->bindParam("dataInclusao",$produto->dataInclusao);
-  $stmt->bindParam("idCategoria",$produto->idCategoria);
-  $stmt->bindParam("id",$id);
-  $stmt->execute();
-  echo json_encode($produto);
-
-}
-
-function deleteProduto($id)
-{
-  $sql = "DELETE FROM produtos WHERE id=:id";
-  $conn = getConn();
-  $stmt = $conn->prepare($sql);
-  $stmt->bindParam("id",$id);
-  $stmt->execute();
-  echo "{'message':'Produto apagado'}";
-}
-
-function getProdutos()
-{
-  $sql = "SELECT *,Categorias.nome as nomeCategoria FROM Produtos,Categorias WHERE Categorias.id=Produtos.idCategoria";
-  $stmt = getConn()->query($sql);
-  $produtos = $stmt->fetchAll(PDO::FETCH_OBJ);
-  echo "{\"produtos\":".json_encode($produtos)."}";
-}
-
-*/
+?>
