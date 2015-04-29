@@ -3,6 +3,7 @@
 require 'vendor/autoload.php';
 require 'models/key_model.php';
 require 'models/quiz_model.php';
+require 'models/score_board_model.php';
 \Slim\Slim::registerAutoloader();
 
 // Configuração do Banco de Dados
@@ -154,6 +155,67 @@ $app->group('/api', function () use ($app, $db) {
                 echo json_encode(array('status' => 0, 'error' => 'Could not generate the key.'));
             }
         });
+
+        # Passando um JSON com uma lista de notas com os IDs dos usuarios e um titulo para a nota, insere os dados no Quadro de Notas
+        $app->post('/score_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_model = new Score_board_model($db);
+
+            $string_json = $app->request()->post('data');
+
+            if (!$key_model->_key_exists($key))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+            } else {
+                $json = json_decode($string_json);
+                if ($json == NULL) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'error' => 'You need to provide a valid JSON named "data".'));
+                } else {
+                    if (!isset($json->title) || !isset($json->scores)) {
+                        $app->response()->status(400);
+                        echo json_encode(array('status' => 0, 
+                            'error' => 'Your JSON need to have a "title" element and an array named "scores" with "user_id" and "score" elements.
+                            Example:
+                            {"title":"Test 1", "scores":
+                                [
+                                    {"user_id":"identfier", "score":10},
+                                    {"user_id":3, "score":9.5},
+                                    {"user_id":12, "score":9.7}
+                                ]
+                            }'
+                        ));
+                    } else {
+                        $data['key'] = $key;
+                        $data['title'] = $json->title;
+                        $activity_id = $score_model->insertActivity($data);
+
+                        foreach ($json->scores as $item) {
+                            $data = array();
+                            $data['activity_id'] = $activity_id;
+                            $data['key'] = $key;
+                            $data['user_id'] = $item->user_id;
+                            $data['score'] = $item->score;
+                            $score_model->insertScore($data);
+                        }
+
+                        $app->response()->status(200);
+                        echo json_encode(array('status' => 1, 'message' => 'Score board updated.'));
+                    }
+                }
+                /*if ($quiz_model->update($data))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Quiz updated.'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.')); // 500 = Internal Server Error
+                }*/
+            }
+
+        });
+
         // Serviço de Notas - Fim
 
     });
