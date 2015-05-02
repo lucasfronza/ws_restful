@@ -204,16 +204,22 @@ $app->group('/api', function () use ($app, $db) {
                         echo json_encode(array('status' => 1, 'message' => 'Score board updated.'));
                     }
                 }
-                /*if ($quiz_model->update($data))
-                {
-                    $app->response()->status(200);
-                    echo json_encode(array('status' => 1, 'message' => 'Quiz updated.'));
-                } else {
-                    $app->response()->status(500);
-                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.')); // 500 = Internal Server Error
-                }*/
             }
+        });
 
+        # Retorna o Quadro completo
+        $app->get('/score_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($score_board_model->get($key));
+            }
         });
 
         // Serviço de Notas - Fim

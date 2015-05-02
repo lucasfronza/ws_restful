@@ -18,4 +18,18 @@ class Score_board_model {
         return $this->db->insert('scores', $data);
     }
 
+    public function get($key)
+    {
+        $scores = $this->db->select('scores', "*", ['key' => $key]);
+        
+        $count = count($scores);
+        for ($i = 0; $i < $count; $i++) {
+            $scores[$i]['title'] = $this->db->get('score_activities', "*", ['activity_id' => $scores[$i]['activity_id']])['title'];
+            unset($scores[$i]['key']);
+        }
+        $ret = array('key' => $key, 'scores' => $scores);
+
+        return $ret;
+    }
+
 }

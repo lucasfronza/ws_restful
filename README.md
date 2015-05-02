@@ -7,7 +7,7 @@ ws_restful
 
 /score_board/{key}
 - [ ] DELETE
-- [ ] GET
+- [x] GET
 - [x] POST
 
 /score_board/{key}/score/{score_id}
