@@ -53,13 +53,13 @@ $app->group('/api', function () use ($app, $db) {
                     echo json_encode(array('status' => 1, 'message' => 'Quiz created.', 'key' => $key));
                 } else {
                     $app->response()->status(500); // 500 = Internal Server Error
-                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.'));
+                    echo json_encode(array('status' => 0, 'message' => 'Could not save the quiz.'));
                 }
             }
             else
             {
                 $app->response()->status(500); // 500 = Internal Server Error
-                echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.'));
+                echo json_encode(array('status' => 0, 'message' => 'Could not save the quiz.'));
             }
         });
 
@@ -81,7 +81,7 @@ $app->group('/api', function () use ($app, $db) {
             if (!$key_model->_key_exists($data['key']))
             {
                 $app->response()->status(400);
-                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
             } else {
 
                 if ($quiz_model->update($data))
@@ -90,7 +90,7 @@ $app->group('/api', function () use ($app, $db) {
                     echo json_encode(array('status' => 1, 'message' => 'Quiz updated.'));
                 } else {
                     $app->response()->status(500);
-                    echo json_encode(array('status' => 0, 'error' => 'Could not save the quiz.')); // 500 = Internal Server Error
+                    echo json_encode(array('status' => 0, 'message' => 'Could not save the quiz.')); // 500 = Internal Server Error
                 }
             }
         });
@@ -103,7 +103,7 @@ $app->group('/api', function () use ($app, $db) {
             if ( ! $key_model->_key_exists($key) )
             {
                 $app->response()->status(400);
-                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
             } else {
                 $app->response()->status(200);
                 echo json_encode($quiz_model->get($key));
@@ -118,7 +118,7 @@ $app->group('/api', function () use ($app, $db) {
             if ( ! $key_model->_key_exists($key))
             {
                 $app->response()->status(400);
-                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
             } else {
                 if($quiz_model->delete($key) && $key_model->_delete_key($key))
                 {
@@ -126,7 +126,7 @@ $app->group('/api', function () use ($app, $db) {
                     echo json_encode(array('status' => 1, 'message' => 'Quiz deleted'));
                 } else {
                     $app->response()->status(500);
-                    echo json_encode(array('status' => 0, 'error' => 'Internal Server Error'));
+                    echo json_encode(array('status' => 0, 'message' => 'Internal Server Error'));
                 }
             }
         });
@@ -152,7 +152,7 @@ $app->group('/api', function () use ($app, $db) {
             else
             {
                 $app->response()->status(500); // 500 = Internal Server Error
-                echo json_encode(array('status' => 0, 'error' => 'Could not generate the key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Could not generate the key.'));
             }
         });
 
@@ -166,17 +166,17 @@ $app->group('/api', function () use ($app, $db) {
             if (!$key_model->_key_exists($key))
             {
                 $app->response()->status(400);
-                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
             } else {
                 $json = json_decode($string_json);
                 if ($json == NULL) {
                     $app->response()->status(400);
-                    echo json_encode(array('status' => 0, 'error' => 'You need to provide a valid JSON named "data".'));
+                    echo json_encode(array('status' => 0, 'message' => 'You need to provide a valid JSON named "data".'));
                 } else {
                     if (!isset($json->title) || !isset($json->scores)) {
                         $app->response()->status(400);
                         echo json_encode(array('status' => 0, 
-                            'error' => 'Your JSON need to have a "title" element and an array named "scores" with "user_id" and "score" elements.
+                            'message' => 'Your JSON need to have a "title" element and an array named "scores" with "user_id" and "score" elements.
                             Example:
                             {"title":"Test 1", "scores":
                                 [
@@ -215,10 +215,31 @@ $app->group('/api', function () use ($app, $db) {
             if ( ! $key_model->_key_exists($key) )
             {
                 $app->response()->status(400);
-                echo json_encode(array('status' => 0, 'error' => 'Invalid API Key.'));
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
             } else {
                 $app->response()->status(200);
                 echo json_encode($score_board_model->get($key));
+            }
+        });
+
+        # Deleta o Quadro completo
+        $app->delete('/score_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                if($score_board_model->delete($key) && $key_model->_delete_key($key))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Score board deleted'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'message' => 'Internal Server Error'));
+                }
             }
         });
 

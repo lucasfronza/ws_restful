@@ -32,4 +32,9 @@ class Score_board_model {
         return $ret;
     }
 
+    public function delete($key)
+    {
+        return ($this->db->delete('scores', ['key' => $key]) && $this->db->delete('score_activities', ['key' => $key]));
+    }
+
 }
