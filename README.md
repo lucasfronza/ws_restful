@@ -11,7 +11,7 @@ ws_restful
 - [x] POST
 
 /score_board/{key}/score/{score_id}
-- [ ] PUT
+- [x] PUT
 
 /score_board/{key}/user/{user_id}
 - [ ] GET

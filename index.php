@@ -243,6 +243,44 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Atualiza uma nota
+        $app->put('/score_board/:key/score/:score_id', function ($key, $score_id) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $string_json = $app->request()->put('data');
+                $json = json_decode($string_json);
+                
+                if ($json == NULL) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'You need to provide a valid JSON named "data".'));
+                } else if (!isset($json->score)) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 
+                        'message' => 'Your JSON need to have a "score". Example:{"score":10.0}'
+                    ));
+                } else {
+                    $data['key'] = $key;
+                    $data['score_id'] = $score_id;
+                    $data['score'] = $json->score;
+
+                    if($score_board_model->updateScore($data))
+                    {
+                        $app->response()->status(200);
+                        echo json_encode(array('status' => 1, 'message' => 'Score updated'));
+                    } else {
+                        $app->response()->status(400);
+                        echo json_encode(array('status' => 0, 'message' => 'Internal Server Error'));
+                    }
+                }
+            }
+        });
+
         // Serviço de Notas - Fim
 
     });

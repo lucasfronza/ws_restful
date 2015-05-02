@@ -37,4 +37,9 @@ class Score_board_model {
         return ($this->db->delete('scores', ['key' => $key]) && $this->db->delete('score_activities', ['key' => $key]));
     }
 
+    public function updateScore($data)
+    {
+        return $this->db->update('scores', $data, ["AND" => ['key' => $data['key'], 'score_id' => $data['score_id']]]);
+    }
+
 }
