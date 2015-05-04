@@ -59,4 +59,9 @@ class Score_board_model {
         return array('key' => $key, 'scores' => $scores);
     }
 
+    public function deleteUser($key, $user_id)
+    {
+        return $this->db->delete('scores', ["AND" => ['key' => $key, 'user_id' => $user_id]]);
+    }
+
 }

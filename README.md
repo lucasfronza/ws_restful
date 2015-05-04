@@ -15,7 +15,7 @@ ws_restful
 
 /score_board/{key}/user/{user_id}
 - [x] GET
-- [ ] DELETE
+- [x] DELETE
 - [ ] POST
 
 /score_board/{key}/users

@@ -303,6 +303,27 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Deleta um usuário e suas notas
+        $app->delete('/score_board/:key/user/:user_id', function ($key, $user_id) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                if (!$score_board_model->deleteUser($key, $user_id)) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'Invalid user_id.'));
+                } else {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'User data deleted.'));
+                }
+                
+            }
+        });
+
         // Serviço de Notas - Fim
 
     });
