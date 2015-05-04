@@ -340,6 +340,20 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Retorna os IDs dos usuários existentes
+        $app->get('/score_board/:key/users', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($score_board_model->getUsers($key));                
+            }
+        });
         // Serviço de Notas - Fim
 
     });

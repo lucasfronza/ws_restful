@@ -85,4 +85,19 @@ class Score_board_model {
         return true;
     }
 
+    public function getUsers($key)
+    {
+        $scores = $this->db->query(
+            "SELECT DISTINCT `user_id` FROM `scores` WHERE `key` = ".$this->db->quote($key).""
+            )->fetchAll();
+
+        $users = array();
+        $count = count($scores);
+        for ($i = 0; $i < $count; $i++) {
+            $users[$i]['user_id'] = $scores[$i]['user_id'];
+        }
+
+        return array('key' => $key, 'users' => $users);
+    }
+
 }

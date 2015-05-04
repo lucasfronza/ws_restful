@@ -19,7 +19,7 @@ ws_restful
 - [x] POST
 
 /score_board/{key}/users
-- [ ] GET
+- [x] GET
 
 #Planejamento Quadro de Notas
 
