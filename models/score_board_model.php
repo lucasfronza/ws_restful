@@ -64,4 +64,25 @@ class Score_board_model {
         return $this->db->delete('scores', ["AND" => ['key' => $key, 'user_id' => $user_id]]);
     }
 
+    public function insertUser($key, $user_id)
+    {
+        $activities = $this->db->select('score_activities', "*", ['key' => $key]);
+
+        if (!$activities) {
+            return false;
+        }
+
+        foreach ($activities as $activity) {
+            $data                = array();
+            $data['key']         = $key;
+            $data['score']       = 0;
+            $data['user_id']     = $user_id;
+            $data['activity_id'] = $activity['activity_id'];
+
+            $this->db->insert('scores', $data);
+        }
+
+        return true;
+    }
+
 }

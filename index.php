@@ -324,6 +324,22 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Adiciona um usuário ao Quadro de Notas com nota 0 em todas as atividades existentes
+        $app->post('/score_board/:key/user/:user_id', function ($key, $user_id) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $score_board_model->insertUser($key, $user_id);
+                $app->response()->status(200);
+                echo json_encode(array('status' => 1, 'message' => 'User added in all activities with score 0.'));                
+            }
+        });
+
         // Serviço de Notas - Fim
 
     });
