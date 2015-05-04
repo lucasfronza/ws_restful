@@ -42,4 +42,21 @@ class Score_board_model {
         return $this->db->update('scores', $data, ["AND" => ['key' => $data['key'], 'score_id' => $data['score_id']]]);
     }
 
+    public function getUserScores($key, $user_id)
+    {
+        if (!$this->db->has('scores', ["AND" => ['key' => $key, 'user_id' => $user_id]])) {
+            return false;
+        }
+
+        $scores = $this->db->select('scores', "*", ["AND" => ['key' => $key, 'user_id' => $user_id]]);
+
+        $count = count($scores);
+        for ($i = 0; $i < $count; $i++) {
+            $scores[$i]['title'] = $this->db->get('score_activities', "*", ['activity_id' => $scores[$i]['activity_id']])['title'];
+            unset($scores[$i]['key']);
+        }
+
+        return array('key' => $key, 'scores' => $scores);
+    }
+
 }

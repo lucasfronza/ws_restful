@@ -281,6 +281,28 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
 
+        # Retorna as notas de um usuário
+        $app->get('/score_board/:key/user/:user_id', function ($key, $user_id) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $score_board_model = new Score_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $scores = $score_board_model->getUserScores($key, $user_id);
+                if (!$scores) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'Invalid user_id.'));
+                } else {
+                    $app->response()->status(200);
+                    echo json_encode($scores);
+                }
+                
+            }
+        });
+
         // Serviço de Notas - Fim
 
     });
