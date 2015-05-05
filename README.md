@@ -1,51 +1,57 @@
 ws_restful
 =============
+Serviços Web educacionais
+
+#Lista de Serviços
+- [x] Quiz
+- [x] Quadro de Notas
+- [ ] Quadro de Presença
 
 #Lista de Tarefas
-/score_board
-- [x] POST
+/attendance_board
+- [ ] POST
 
-/score_board/{key}
-- [x] DELETE
-- [x] GET
-- [x] POST
+/attendance_board/{key}
+- [ ] DELETE
+- [ ] GET
+- [ ] POST
 
-/score_board/{key}/score/{score_id}
-- [x] PUT
+/attendance_board/{key}/score/{score_id}
+- [ ] PUT
 
-/score_board/{key}/user/{user_id}
-- [x] GET
-- [x] DELETE
-- [x] POST
+/attendance_board/{key}/user/{user_id}
+- [ ] GET
+- [ ] DELETE
+- [ ] POST
 
-/score_board/{key}/users
-- [x] GET
+/attendance_board/{key}/users
+- [ ] GET
 
-#Planejamento Quadro de Notas
+#Planejamento Quadro de Presença
 
-/score_board
-    - POST: cria um novo quadro de notas, retornando um 'key'
+/attendance_board
+    - POST: cria um novo quadro de presença, retornando um 'key'
 
-/score_board/{key}
-    - DELETE: deleta um quadro de notas
-    - GET: retorna o quadro com todas as notas
-    - POST: insere uma lista de notas com os IDs dos usuarios e um titulo para a nota(ex: Prova 1)
-        Ex: {title:'P1', scores:
+/attendance_board/{key}
+    - DELETE: deleta um quadro de presença
+    - GET: retorna o quadro completo
+    - POST: insere uma lista presença com os IDs dos usuarios e um titulo para a atividade(ex: Aula Extra, 24-05-2015)
+        Ex: {"title":"Aula Extra 28-03-2015", "scores":
                 [
-                    {user_id:8, score:10},
-                    {user_id:3, score:9.5},
-                    {user_id:12, score:9.7}
+                    {"user_id":8, "attended":1},
+                    {"user_id":3, "attended":0},
+                    {"user_id":12, "attended":1}
                 ]
             }
 
-/score_board/{key}/score/{score_id}
-    - PUT: atualiza a nota
+/attendance_board/{key}/score/{score_id}
+    - PUT: atualiza uma presença
 
-/score_board/{key}/user/{user_id}
-    - GET: retorna as notas de um determinado usuario
-    - DELETE: deleta um usuario do quadro de notas
-    - POST: adiciona um usuario ao quadro de notas
+/attendance_board/{key}/user/{user_id}
+    - GET: retorna as presenças de um determinado usuario
+    - DELETE: deleta um usuario do quadro de presença
+    - POST: adiciona um usuario ao quadro de presença
 
-/score_board/{key}/users
+/attendance_board/{key}/users
     - GET: retorna os IDs dos usuarios existentes
 
