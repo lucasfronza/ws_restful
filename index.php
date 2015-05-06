@@ -153,6 +153,57 @@ $app->group('/api', function () use ($app, $db) {
                 echo json_encode(array('status' => 0, 'message' => 'Could not generate the key.'));
             }
         });
+
+        # Passando um JSON com uma lista de presença com os IDs dos usuarios e um titulo para a presença, insere os dados no Quadro de Presença
+        $app->post('/attendance_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $attendance_model = new Attendance_board_model($db);
+
+            $string_json = $app->request()->post('data');
+
+            if (!$key_model->_key_exists($key))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $json = json_decode($string_json);
+                if ($json == NULL) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'You need to provide a valid JSON named "data".'));
+                } else {
+                    if (!isset($json->title) || !isset($json->attendances)) {
+                        $app->response()->status(400);
+                        echo json_encode(array('status' => 0, 
+                            'message' => 'Your JSON need to have a "title" element and an array named "attendances" with "user_id" and "attended" elements.
+                            Example:
+                            {"title":"Aula Extra 28-03-2015", "attendances":  
+                                [  
+                                    {"user_id":8, "attended":1},  
+                                    {"user_id":3, "attended":0},  
+                                    {"user_id":12, "attended":1}  
+                                ]  
+                            }'
+                        ));
+                    } else {
+                        $data['key'] = $key;
+                        $data['title'] = $json->title;
+                        $activity_id = $attendance_model->insertActivity($data);
+
+                        foreach ($json->attendances as $item) {
+                            $data = array();
+                            $data['activity_id'] = $activity_id;
+                            $data['key'] = $key;
+                            $data['user_id'] = $item->user_id;
+                            $data['attended'] = $item->attended;
+                            $attendance_model->insertAttendance($data);
+                        }
+
+                        $app->response()->status(200);
+                        echo json_encode(array('status' => 1, 'message' => 'Attendance board updated.'));
+                    }
+                }
+            }
+        });
         // Serviço de Presença - Fim
 
         // Serviço de Notas - Início

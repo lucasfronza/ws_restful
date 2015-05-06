@@ -14,7 +14,7 @@ Serviços Web educacionais
 /attendance_board/{key}
 - [ ] DELETE
 - [ ] GET
-- [ ] POST
+- [x] POST
 
 /attendance_board/{key}/score/{score_id}
 - [ ] PUT
@@ -36,7 +36,7 @@ Serviços Web educacionais
     - DELETE: deleta um quadro de presença  
     - GET: retorna o quadro completo  
     - POST: insere uma lista presença com os IDs dos usuarios e um titulo para a atividade(ex: Aula Extra, 24-05-2015)  
-        Ex: {"title":"Aula Extra 28-03-2015", "scores":  
+        Ex: {"title":"Aula Extra 28-03-2015", "attendances":  
                 [  
                     {"user_id":8, "attended":1},  
                     {"user_id":3, "attended":0},  
