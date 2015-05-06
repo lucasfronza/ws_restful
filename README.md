@@ -20,7 +20,7 @@ Serviços Web educacionais
 - [x] PUT
 
 /attendance_board/{key}/user/{user_id}
-- [ ] GET
+- [x] GET
 - [ ] DELETE
 - [ ] POST
 
