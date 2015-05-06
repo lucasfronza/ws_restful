@@ -204,6 +204,21 @@ $app->group('/api', function () use ($app, $db) {
                 }
             }
         });
+
+        # Retorna o Quadro completo
+        $app->get('/attendance_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $attendance_model = new Attendance_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($attendance_model->get($key));
+            }
+        });
         // Serviço de Presença - Fim
 
         // Serviço de Notas - Início

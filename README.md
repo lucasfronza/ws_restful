@@ -13,7 +13,7 @@ Serviços Web educacionais
 
 /attendance_board/{key}
 - [ ] DELETE
-- [ ] GET
+- [x] GET
 - [x] POST
 
 /attendance_board/{key}/score/{score_id}
