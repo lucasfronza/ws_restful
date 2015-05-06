@@ -75,7 +75,7 @@ class Attendance_board_model {
         foreach ($activities as $activity) {
             $data                = array();
             $data['key']         = $key;
-            $data['attended']    = 0;
+            $data['attended']    = 1;
             $data['user_id']     = $user_id;
             $data['activity_id'] = $activity['activity_id'];
 
