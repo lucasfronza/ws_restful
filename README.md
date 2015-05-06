@@ -12,12 +12,12 @@ Serviços Web educacionais
 - [x] POST
 
 /attendance_board/{key}
-- [ ] DELETE
+- [x] DELETE
 - [x] GET
 - [x] POST
 
-/attendance_board/{key}/score/{score_id}
-- [ ] PUT
+/attendance_board/{key}/attendance/{attendance_id}
+- [x] PUT
 
 /attendance_board/{key}/user/{user_id}
 - [ ] GET

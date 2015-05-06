@@ -39,7 +39,7 @@ class Attendance_board_model {
 
     public function updateAttendance($data)
     {
-        return $this->db->update('attendances', $data, ["AND" => ['key' => $data['key'], 'attended_id' => $data['attended_id']]]);
+        return $this->db->update('attendances', $data, ["AND" => ['key' => $data['key'], 'attendance_id' => $data['attendance_id']]]);
     }
 
     public function getUserAttendances($key, $user_id)
