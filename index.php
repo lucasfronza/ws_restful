@@ -4,6 +4,7 @@ require 'vendor/autoload.php';
 require 'models/key_model.php';
 require 'models/quiz_model.php';
 require 'models/score_board_model.php';
+require 'models/attendance_board_model.php';
 \Slim\Slim::registerAutoloader();
 
 // Configuração do Banco de Dados
@@ -133,6 +134,25 @@ $app->group('/api', function () use ($app, $db) {
         // Serviço de Quiz - Fim
 
         // Serviço de Presença - Início
+        # Cria um novo Quadro de Presença, retornando um key
+        $app->post('/attendance_board/', function () use ($app, $db) {
+            $key_model = new Key_model($db);
+            $attendance_model = new Attendance_board_model($db);
+            // Build a new key
+            $key = $key_model->_generate_key();
+
+            // Insert the new key
+            if ($key_model->_insert_key($key))
+            {
+                $app->response()->status(201); // 201 = Created
+                echo json_encode(array('status' => 1, 'message' => 'Attedance board created.', 'key' => $key));
+            }
+            else
+            {
+                $app->response()->status(500); // 500 = Internal Server Error
+                echo json_encode(array('status' => 0, 'message' => 'Could not generate the key.'));
+            }
+        });
         // Serviço de Presença - Fim
 
         // Serviço de Notas - Início

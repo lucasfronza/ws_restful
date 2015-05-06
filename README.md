@@ -9,7 +9,7 @@ Serviços Web educacionais
 
 #Lista de Tarefas
 /attendance_board
-- [ ] POST
+- [x] POST
 
 /attendance_board/{key}
 - [ ] DELETE
