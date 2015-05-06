@@ -21,7 +21,7 @@ Serviços Web educacionais
 
 /attendance_board/{key}/user/{user_id}
 - [x] GET
-- [ ] DELETE
+- [x] DELETE
 - [ ] POST
 
 /attendance_board/{key}/users
