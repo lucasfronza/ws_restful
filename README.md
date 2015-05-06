@@ -25,7 +25,7 @@ Serviços Web educacionais
 - [x] POST
 
 /attendance_board/{key}/users
-- [ ] GET
+- [x] GET
 
 #Planejamento Quadro de Presença
 

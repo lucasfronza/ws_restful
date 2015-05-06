@@ -336,6 +336,21 @@ $app->group('/api', function () use ($app, $db) {
                 echo json_encode(array('status' => 1, 'message' => 'User added in all activities with attendance 1.'));                
             }
         });
+
+        # Retorna os IDs dos usuários existentes
+        $app->get('/attendance_board/:key/users', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $attendance_model = new Attendance_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($attendance_model->getUsers($key));                
+            }
+        });
         // Serviço de Presença - Fim
 
         // Serviço de Notas - Início
