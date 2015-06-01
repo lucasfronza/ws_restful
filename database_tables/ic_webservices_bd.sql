@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: 05-Maio-2015 às 02:49
+-- Generation Time: 01-Jun-2015 às 20:13
 -- Versão do servidor: 5.6.16
 -- PHP Version: 5.5.9
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `attendances` (
   `user_id` varchar(200) NOT NULL,
   `attended` tinyint(1) NOT NULL,
   PRIMARY KEY (`attendance_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=25 ;
 
 -- --------------------------------------------------------
 
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `attendance_activities` (
   `key` varchar(40) NOT NULL,
   `title` varchar(70) NOT NULL,
   PRIMARY KEY (`activity_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,22 @@ CREATE TABLE IF NOT EXISTS `keys` (
   `ignore_limits` tinyint(1) NOT NULL DEFAULT '0',
   `date_created` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=45 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `notice`
+--
+
+CREATE TABLE IF NOT EXISTS `notice` (
+  `notice_id` int(11) NOT NULL AUTO_INCREMENT,
+  `key` varchar(40) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `notice` text NOT NULL,
+  `datetime` datetime NOT NULL,
+  PRIMARY KEY (`notice_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -81,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `quiz` (
   `alternative5` text NOT NULL,
   `correctAnswer` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=15 ;
 
 -- --------------------------------------------------------
 
