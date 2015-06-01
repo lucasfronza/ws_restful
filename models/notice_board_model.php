@@ -23,6 +23,11 @@ class Notice_board_model {
         return $this->db->delete('notice', ['key' => $key]);
     }
 
+    public function deleteNotice($key, $notice_id)
+    {
+        return $this->db->delete('notice', ["AND" => ['key' => $key, 'notice_id' => $notice_id]]);
+    }
+
     public function update($data)
     {
         return $this->db->update('notice', $data, ["AND" => ['key' => $data['key'], 'notice_id' => $data['notice_id']]]);

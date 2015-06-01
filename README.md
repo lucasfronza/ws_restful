@@ -20,7 +20,7 @@ Serviços Web educacionais
 
 /notice_board/{key}/notice/{notice_id}
 - [ ] PUT
-- [ ] DELETE
+- [x] DELETE
 
 /notice_board/{key}/notices
 - [ ] GET

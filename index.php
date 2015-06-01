@@ -672,6 +672,26 @@ $app->group('/api', function () use ($app, $db) {
                 }
             }
         });
+
+        # Deleta um aviso
+        $app->delete('/notice_board/:key/notice/:notice_id', function ($key, $notice_id) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $notice_model = new Notice_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                if (!$notice_model->deleteNotice($key, $notice_id)) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'Invalid notice_id.'));
+                } else {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Notice data deleted.'));
+                }
+            }
+        });
         // Serviço de Avisos - Fim
     });
 
