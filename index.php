@@ -594,6 +594,27 @@ $app->group('/api', function () use ($app, $db) {
                 echo json_encode(array('status' => 0, 'message' => 'Could not generate the key.'));
             }
         });
+
+        # Deleta o Quadro completo
+        $app->delete('/notice_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $notice_model = new Notice_board_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                if($notice_model->delete($key) && $key_model->_delete_key($key))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Notice board deleted'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'message' => 'Internal Server Error'));
+                }
+            }
+        });
         // Serviço de Avisos - Fim
     });
 
