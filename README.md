@@ -16,7 +16,7 @@ Serviços Web educacionais
 /notice_board/{key}
 - [x] DELETE
 - [x] GET
-- [ ] POST
+- [x] POST
 
 /notice_board/{key}/notice/{notice_id}
 - [ ] PUT

@@ -630,6 +630,48 @@ $app->group('/api', function () use ($app, $db) {
                 echo json_encode($notice_model->get($key));
             }
         });
+
+        # Passando um JSON com titulo, aviso e data/hora insere os dados no Quadro de Avisos
+        $app->post('/notice_board/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $notice_model = new Notice_board_model($db);
+
+            $string_json = $app->request()->post('data');
+
+            if (!$key_model->_key_exists($key))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $json = json_decode($string_json);
+                if ($json == NULL) {
+                    $app->response()->status(400);
+                    echo json_encode(array('status' => 0, 'message' => 'You need to provide a valid JSON named "data".'));
+                } else {
+                    if (!isset($json->title) || !isset($json->notice) || !isset($json->datetime)) {
+                        $app->response()->status(400);
+                        echo json_encode(array('status' => 0,
+                            'message' => 'Your JSON need to have "title", "notice" and "datetime" elements.
+                            Example:
+                            {
+                                "title":"Aula Extra 28-03-2015",
+                                "notice":"Lorem ipsum",
+                                "datetime":"28-06-2015 14:00"
+                            }'
+                        ));
+                    } else {
+                        $data['key'] = $key;
+                        $data['title'] = $json->title;
+                        $data['notice'] = $json->notice;
+                        $data['datetime'] = $json->datetime;
+                        $notice_id = $notice_model->insert($data);
+
+                        $app->response()->status(200);
+                        echo json_encode(array('status' => 1, 'message' => 'Notice board updated.'));
+                    }
+                }
+            }
+        });
         // Serviço de Avisos - Fim
     });
 
