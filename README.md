@@ -11,7 +11,7 @@ Serviços Web educacionais
 
 #Lista de Tarefas
 /notice_board
-- [ ] POST
+- [x] POST
 
 /notice_board/{key}
 - [ ] DELETE

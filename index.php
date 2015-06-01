@@ -574,6 +574,27 @@ $app->group('/api', function () use ($app, $db) {
         });
         // Serviço de Notas - Fim
 
+        // Serviço de Avisos - Início
+        # Cria um novo Quadro de Avisos, retornando um key
+        $app->post('/notice_board/', function () use ($app, $db) {
+            $key_model = new Key_model($db);
+            $notice_model = new Notice_board_model($db);
+            // Build a new key
+            $key = $key_model->_generate_key();
+
+            // Insert the new key
+            if ($key_model->_insert_key($key))
+            {
+                $app->response()->status(201); // 201 = Created
+                echo json_encode(array('status' => 1, 'message' => 'Notice board created.', 'key' => $key));
+            }
+            else
+            {
+                $app->response()->status(500); // 500 = Internal Server Error
+                echo json_encode(array('status' => 0, 'message' => 'Could not generate the key.'));
+            }
+        });
+        // Serviço de Avisos - Fim
     });
 
 });
