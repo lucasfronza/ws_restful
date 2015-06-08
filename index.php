@@ -758,14 +758,10 @@ $app->group('/api', function () use ($app, $db) {
                 $data['text'] = "";
                 $data['datetime'] = date('Y-m-d H:i:s');
 
-                if ($wiki_model->insert($data))
-                {
-                    $app->response()->status(201); // 201 = Created
-                    echo json_encode(array('status' => 1, 'message' => 'Wiki created.', 'key' => $key));
-                } else {
-                    $app->response()->status(500); // 500 = Internal Server Error
-                    echo json_encode(array('status' => 0, 'message' => 'Could not save the wiki.'));
-                }
+                $wiki_model->insert($data);
+
+                $app->response()->status(201); // 201 = Created
+                echo json_encode(array('status' => 1, 'message' => 'Wiki created.', 'key' => $key));
             }
             else
             {

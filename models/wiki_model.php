@@ -25,7 +25,7 @@ class Wiki_model {
 
     public function update($data)
     {
-        return $this->db->update('wiki', $data, ['key' => $data['key']);
+        return $this->db->update('wiki', $data, ['key' => $data['key']]);
     }
 
 }
