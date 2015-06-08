@@ -10,28 +10,20 @@ Serviços Web educacionais
 - [ ] Wiki
 
 #Lista de Tarefas
-/notice_board
-- [x] POST
+/wiki
+- [ ] POST
 
-/notice_board/{key}
-- [x] DELETE
-- [x] GET
-- [x] POST
+/wiki/{key}
+- [ ] DELETE
+- [ ] GET
+- [ ] PUT
 
-/notice_board/{key}/notice/{notice_id}
-- [x] PUT
-- [x] DELETE
+#Planejamento Wiki
+/wiki
+- POST: cria um novo wiki vazio, retornando um 'key'
 
-#Planejamento Quadro de Avisos
-/notice_board
-- POST: cria um novo quadro de avisos, retornando um 'key'
-
-/notice_board/{key}
-- DELETE: deleta um quadro de avisos
-- GET: retorna o quadro completo
-- POST: insere uma aviso com titulo, aviso e data/hora
-Ex: {"title":"Aula Extra 28-03-2015", "notice":"Lorem ipsum", "datetime":"28-06-2015 14:00"}
-
-/notice_board/{key}/notice/{notice_id}
-- PUT: atualiza um aviso
-- DELETE: deleta um aviso
+/wiki/{key}
+- DELETE: deleta o wiki
+- GET: retorna o wiki
+- PUT: atualiza o wiki passando text e datetime
+Ex: {"text":"Lorem ipsum", "datetime":"28-06-2015 14:00"}
