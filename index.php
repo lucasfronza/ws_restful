@@ -6,6 +6,7 @@ require 'models/quiz_model.php';
 require 'models/score_board_model.php';
 require 'models/attendance_board_model.php';
 require 'models/notice_board_model.php';
+require 'models/wiki_model.php';
 \Slim\Slim::registerAutoloader();
 
 // Configuração do Banco de Dados
