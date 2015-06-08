@@ -5,6 +5,7 @@ require 'models/key_model.php';
 require 'models/quiz_model.php';
 require 'models/score_board_model.php';
 require 'models/attendance_board_model.php';
+require 'models/notice_board_model.php';
 \Slim\Slim::registerAutoloader();
 
 // Configuração do Banco de Dados
@@ -656,7 +657,7 @@ $app->group('/api', function () use ($app, $db) {
                             {
                                 "title":"Aula Extra 28-03-2015",
                                 "notice":"Lorem ipsum",
-                                "datetime":"28-06-2015 14:00"
+                                "datetime":"2015-03-24 17:45:12"
                             }'
                         ));
                     } else {
@@ -717,7 +718,7 @@ $app->group('/api', function () use ($app, $db) {
                         {
                             "title":"Aula Extra 28-03-2015",
                             "notice":"Lorem ipsum",
-                            "datetime":"28-06-2015 14:00"
+                            "datetime":"2015-03-24 17:45:12"
                         }'
                     ));
                 } else {

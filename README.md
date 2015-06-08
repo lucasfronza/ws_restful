@@ -6,7 +6,7 @@ Serviços Web educacionais
 - [x] Quiz
 - [x] Quadro de Notas
 - [x] Quadro de Presença
-- [ ] Quadro de Avisos
+- [x] Quadro de Avisos
 - [ ] Wiki
 
 #Lista de Tarefas
