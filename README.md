@@ -11,12 +11,12 @@ Serviços Web educacionais
 
 #Lista de Tarefas
 /wiki
-- [ ] POST
+- [x] POST
 
 /wiki/{key}
-- [ ] DELETE
-- [ ] GET
-- [ ] PUT
+- [x] DELETE
+- [x] GET
+- [x] PUT
 
 #Planejamento Wiki
 /wiki
@@ -25,5 +25,4 @@ Serviços Web educacionais
 /wiki/{key}
 - DELETE: deleta o wiki
 - GET: retorna o wiki
-- PUT: atualiza o wiki passando text e datetime
-Ex: {"text":"Lorem ipsum", "datetime":"28-06-2015 14:00"}
+- PUT: atualiza o wiki passando 'text'

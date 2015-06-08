@@ -741,6 +741,101 @@ $app->group('/api', function () use ($app, $db) {
             }
         });
         // Serviço de Avisos - Fim
+
+        // Serviço de Wiki - Início
+        # Cria um novo Wiki vazio, retornando um key
+        $app->post('/wiki/', function () use ($app, $db) {
+            $key_model = new Key_model($db);
+            $wiki_model = new Wiki_model($db);
+            // Build a new key
+            $key = $key_model->_generate_key();
+
+            // Insert the new key
+            if ($key_model->_insert_key($key))
+            {
+
+                $data['key'] = $key;
+                $data['text'] = "";
+                $data['datetime'] = date('Y-m-d H:i:s');
+
+                if ($wiki_model->insert($data))
+                {
+                    $app->response()->status(201); // 201 = Created
+                    echo json_encode(array('status' => 1, 'message' => 'Wiki created.', 'key' => $key));
+                } else {
+                    $app->response()->status(500); // 500 = Internal Server Error
+                    echo json_encode(array('status' => 0, 'message' => 'Could not save the wiki.'));
+                }
+            }
+            else
+            {
+                $app->response()->status(500); // 500 = Internal Server Error
+                echo json_encode(array('status' => 0, 'message' => 'Could not save the wiki.'));
+            }
+        });
+
+        # Passando o texto atualiza o Wiki
+        $app->put('/wiki/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $wiki_model = new Wiki_model($db);
+
+            $data['key'] = $key;
+            $data['text'] = $app->request()->put('text');;
+            $data['datetime'] = date('Y-m-d H:i:s');
+
+            if (!$key_model->_key_exists($data['key']))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+
+                if ($wiki_model->update($data))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Wiki updated.'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'message' => 'Could not save the wiki.')); // 500 = Internal Server Error
+                }
+            }
+        });
+
+        # Retorna o Wiki
+        $app->get('/wiki/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $wiki_model = new Wiki_model($db);
+
+            if ( ! $key_model->_key_exists($key) )
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                $app->response()->status(200);
+                echo json_encode($wiki_model->get($key));
+            }
+        });
+
+        # Deleta o Wiki
+        $app->delete('/wiki/:key', function ($key) use ($app, $db) {
+            $key_model = new Key_model($db);
+            $wiki_model = new Wiki_model($db);
+
+            if ( ! $key_model->_key_exists($key))
+            {
+                $app->response()->status(400);
+                echo json_encode(array('status' => 0, 'message' => 'Invalid API Key.'));
+            } else {
+                if($wiki_model->delete($key) && $key_model->_delete_key($key))
+                {
+                    $app->response()->status(200);
+                    echo json_encode(array('status' => 1, 'message' => 'Wiki deleted'));
+                } else {
+                    $app->response()->status(500);
+                    echo json_encode(array('status' => 0, 'message' => 'Internal Server Error'));
+                }
+            }
+        });
+        // Serviço de Wiki - Fim
     });
 
 });
