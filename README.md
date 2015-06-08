@@ -19,11 +19,8 @@ Serviços Web educacionais
 - [x] POST
 
 /notice_board/{key}/notice/{notice_id}
-- [ ] PUT
+- [x] PUT
 - [x] DELETE
-
-/notice_board/{key}/notices
-- [ ] GET
 
 #Planejamento Quadro de Avisos
 /notice_board
@@ -38,6 +35,3 @@ Ex: {"title":"Aula Extra 28-03-2015", "notice":"Lorem ipsum", "datetime":"28-06-
 /notice_board/{key}/notice/{notice_id}
 - PUT: atualiza um aviso
 - DELETE: deleta um aviso
-
-/notice_board/{key}/notices
-- GET: retorna os IDs dos avisos
